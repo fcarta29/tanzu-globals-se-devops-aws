@@ -94,8 +94,31 @@ RUN echo "Installing Tekton CLI" \
   && chmod +x /usr/local/bin/tkn \
   && tkn version
 
+# Install Krew
+RUN echo "Installing Krew" \
+  && (set -x; cd "$(mktemp -d)" \
+  && OS="$(uname | tr '[:upper:]' '[:lower:]')" \
+  && ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" \
+  && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" \
+  && tar zxvf krew.tar.gz \
+  && KREW=./krew-"${OS}_${ARCH}" \
+  && "$KREW" install krew) \
+  && echo "export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$PATH" >> /root/.bashrc
+
+# Install Kubectx - need the PATH here because export above doesnt seem to take in effect yet here?
+RUN echo "Installing kubectx" \
+  && PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH" \
+  && kubectl krew install ctx
+
+# Install Kubens - need the PATH here because export above doesnt seem to take in effect yet here?
+RUN echo "Installing kubens" \
+  && PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH" \
+  kubectl krew install ns
+
 # Create Aliases
-RUN echo "alias k=kubectl" > /root/.profile
+RUN echo "alias k=kubectl" >> /root/.profile \
+  && echo "alias kubectx='kubectl ctx'" >> /root/.profile \
+  && echo "alias kubens='kubectl ns'" >> /root/.profile
 
 # Leave Container Running for SSH Access - SHOULD REMOVE
 ENTRYPOINT ["tail", "-f", "/dev/null"]

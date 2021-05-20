@@ -1,0 +1,16 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  labels:
+    app: argocd
+  name: argocd-http-proxy
+  namespace: argocd
+spec:
+  tcpproxy:
+    services:
+    - name: argocd-server
+      port: 443
+  virtualhost:
+    fqdn: argocd.tanzu.frankcarta.com
+    tls:
+      passthrough: true

@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: eduk8s
+spec:
+  destination:
+    name: fcarta-workshop-a
+    namespace: ''
+    server: ''
+  source:
+    path: .
+    repoURL: 'https://github.com/fcarta29/workshop-dashboard'
+    targetRevision: HEAD
+  project: workshop
+  syncPolicy:
+    syncOptions:
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true
+

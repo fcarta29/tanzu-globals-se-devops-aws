@@ -1,0 +1,16 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  labels:
+    app: tekton-dashboard
+  name: tekton-dashboard-http-proxy
+  namespace: tekton-pipelines
+spec:
+  routes:
+  - services:
+    - name: tekton-dashboard
+      port: 9097
+    conditions:
+    - prefix: /      
+  virtualhost:
+    fqdn: tekton.tanzu.frankcarta.com
