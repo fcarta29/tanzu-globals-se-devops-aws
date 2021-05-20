@@ -3,10 +3,13 @@ LABEL maintainer="Frank Carta <fcarta@vmware.com>"
 
 ENV KUBECTL_VERSION=v1.19.6
 ENV ARGOCD_CLI_VERSION=v1.7.7
-ENV KPACK_VERSION=0.2.0
+ENV KPACK_VERSION=0.3.0
 ENV ARGOCD_VERSION=v2.0.1
 ENV ISTIO_VERSION=1.7.4
 ENV TKN_VERSION=0.17.2
+ENV KPDEMO_VERSION=v0.3.0
+ENV TANZU_CLI_VERSION=v1.3.1
+ENV TANZU_CE_CLI_VERSION=v0.5.0
 
 # Install System libraries
 RUN echo "Installing System Libraries" \
@@ -24,6 +27,21 @@ RUN echo "Installing TMC CLI" \
   && mv tmc /usr/local/bin/tmc \
   && which tmc \
   && tmc version
+
+#Install Tanzu CLI
+COPY bin/tanzu-cli-bundle-${TANZU_CLI_VERSION}-linux-amd64.tar .
+RUN echo "Installing Tanzu CLI" \
+  && mkdir -p tanzu \
+  && tar xvf tanzu-cli-bundle-${TANZU_CLI_VERSION}-linux-amd64.tar -C tanzu \
+  && cd tanzu/cli \
+  && install core/${TANZU_CLI_VERSION}/tanzu-core-linux_amd64 /usr/local/bin/tanzu \
+  && tanzu version 
+
+#Install Tanzu CLI Plugins
+RUN echo "Installing Tanzu CLI Plugins" \
+  && cd tanzu \
+  && tanzu plugin install --local cli all \
+  && tanzu plugin list
 
 # Install Kubectl
 RUN echo "Installing Kubectl" \
@@ -94,7 +112,7 @@ RUN echo "Installing Tekton CLI" \
   && chmod +x /usr/local/bin/tkn \
   && tkn version
 
-# Install Krew
+# Install Krew - needed for kubectx and kubens
 RUN echo "Installing Krew" \
   && (set -x; cd "$(mktemp -d)" \
   && OS="$(uname | tr '[:upper:]' '[:lower:]')" \

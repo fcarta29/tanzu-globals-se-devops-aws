@@ -1,0 +1,40 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-manifest
+spec:
+  params:
+    - name: GIT_HUB_CREDS_USR
+      type: string
+    - name: GIT_HUB_CREDS_PSW
+      type: string
+    - name: digest
+      type: string
+  workspaces:
+    - name: source
+      description: A workspace that contains the fetched git repository.
+  steps:
+    - name: build-manifest
+      workingDir: $(workspaces.source.path)
+      image: harbor.tanzu.frankcarta.com/builders/tekton-task
+      script: |
+        #!/usr/bin/env bash
+        rm -Rf tanzu-demo-lab-aws-examples
+        
+        git clone https:///$(params.GIT_HUB_CREDS_USR):$(params.GIT_HUB_CREDS_PSW)@github.com/fcarta29/tanzu-demo-lab-aws-examples.git
+        
+        cd tanzu-demo-lab-aws-examples
+        git checkout release    
+
+        cd spring-petclinic/deploy                    
+        ytt -f templates/kustomization.yaml -f templates/values.yaml -v digest='$(params.digest)' --output-files release/overlays/demo/.
+
+        git config --global user.name "Frank Carta"
+        git config --global user.email "fcarta@vmare.com"
+        git commit -am "Releasing $(params.digest)"
+
+        git pull --rebase origin spring-petclinic-demo
+
+        git push origin release -f
+        
+  

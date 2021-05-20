@@ -14,6 +14,8 @@ imagePullSecrets:
 apiVersion: kpack.io/v1alpha1
 kind: Builder
 metadata:
+  labels:
+    app: spring-petclinic
   name: spring-petclinic-builder
   namespace: spring-petclinic
 spec:
@@ -47,4 +49,4 @@ spec:
     git:
       url: https://github.com/fcarta29/tanzu-demo-lab-aws-examples.git
       revision: spring-petclinic-demo
-    subPath: "spring-petclinic"
+    subPath: "spring-petclinic/code"

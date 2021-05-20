@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: spring-petclinic
+spec:
+  destination:
+    name: fcarta-tanzudemo
+    namespace: spring-petclinic
+    server: ''
+  source:
+    path: deploy/argocd/apps/spring-petclinic/release/overlays/demo
+    repoURL: 'https://github.com/fcarta29/tanzu-globals-se-devops-aws'
+    targetRevision: HEAD
+  project: tanzudemo
+  syncPolicy:
+    automated: null
+    syncOptions:
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true

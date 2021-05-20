@@ -1,0 +1,16 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  labels:
+    app: tekton-events
+  name: tekton-events-http-proxy
+  namespace: default
+spec:
+  routes:
+  - services:
+    - name: el-harbor-eventlistener
+      port: 8080
+    conditions:
+    - prefix: /harbor     
+  virtualhost:
+    fqdn: events.tanzu.frankcarta.com

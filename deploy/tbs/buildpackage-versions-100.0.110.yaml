@@ -1,0 +1,25 @@
+buildpackages:
+- image: registry.pivotal.io/tanzu-go-buildpack/go
+  digest: sha256:27a7f69ef7f408b8d202960eeb18a069522b53554ee548d3b1ff8587eda36672
+  version: 1.4.0
+- image: registry.pivotal.io/tanzu-java-buildpack/java
+  digest: sha256:e6f8fca2c90179c243b19293a1a3377e45005b28a286a28d13aceb6956743d29
+  version: 5.8.0
+- image: registry.pivotal.io/tanzu-nodejs-buildpack/nodejs
+  digest: sha256:df60c87b7c96084776d971ab02f459b429134d9dca3ca85144da26a69f4c1b5b
+  version: 1.9.0
+- image: registry.pivotal.io/tanzu-java-native-image-buildpack/java-native-image
+  digest: sha256:15497d2f1d5fb0c7a15deb695882d8b4a9b412dceadf0d0d999c1df52aed2732
+  version: 4.2.0
+- image: registry.pivotal.io/tbs-dependencies/tanzu-buildpacks_php
+  digest: sha256:05c7b547e5ddb18009b0e84aacc7f37dc6fd98bfbe06f8dcc034b12e8407a9e2
+  version: 0.1.1
+- image: registry.pivotal.io/tbs-dependencies/tanzu-buildpacks_nginx
+  digest: sha256:6411fdee5562df26f1b8ff4c816371eb3edea88170b1f2bf75fbf49ad0469983
+  version: 0.1.0
+- image: registry.pivotal.io/tbs-dependencies/tanzu-buildpacks_httpd
+  digest: sha256:70cc97ea4e16b33f14a8659ed88b2e9174e3605e2ee77beb754440a5e22bc0fc
+  version: 0.1.0
+- image: registry.pivotal.io/tbs-dependencies/paketo-buildpacks_procfile
+  digest: sha256:61b05ad4392efb66a61098e816099a76b95e037605ceb92bb509e137987fef1d
+  version: 4.1.0

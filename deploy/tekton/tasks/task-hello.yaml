@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: hello
+  namespace: default
+spec:
+  params:
+    - name: digest
+      type: string
+  workspaces:
+    - name: source
+      description: A workspace that contains the fetched git repository.      
+  steps:
+    - name: hello
+      image: ubuntu:18.04
+      workingDir: $(workspaces.source.path)
+      command:
+        - echo
+      args:
+        - "Hello World! $(params.digest)"
