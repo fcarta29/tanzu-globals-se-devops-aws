@@ -5,7 +5,7 @@
 ```
 kubectl create clusterrolebinding privileged-cluster-role-binding --clusterrole=vmware-system-tmc-psp-privileged <group/service-acct>
 ```
-4. NOTE - You will need access to Tanzu Net to download cli binaries that should go in the `bin/` directory - See build-tanzu-globals-se-devops.dockerfile for details
+4. NOTE - You will need access to Tanzu Net (https://network.pivotal.io/) and MyVMware (https://my.vmware.com/) to download the cli binaries that should go in the `bin/` directory - See build-tanzu-globals-se-devops.dockerfile for details
 * tmc
 * tanzu cli
 * kp cli
