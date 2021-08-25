@@ -1,0 +1,14 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: harbor-eventlistener
+  namespace: default
+spec:
+  serviceAccountName: tekton-sa
+  triggers:
+    - name: harbor-webhook-event-trigger
+      bindings:
+        - ref: harbor-webhook-clustertriggerbinding
+          kind: ClusterTriggerBinding
+      template:
+        ref: harbor-triggertemplate

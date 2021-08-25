@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: harbor-pipeline
+  namespace: default
+spec:
+  workspaces: 
+    - name: source
+      description: The workspace containing the source code which is to be build, pushed and deployed
+  params: 
+    - name: type
+    - name: occur_at
+    - name: operator
+    - name: digest
+    - name: tag
+    - name: resource_url
+    - name: date_created
+    - name: name
+    - name: namespace
+    - name: repo_full_name
+    - name: repo_type
+  tasks:
+    - name: build-manifest
+      taskRef:
+        name: build-manifest
+      #runAfter:
+      #- git-clone
+      params:
+        - name: git_user
+          value: fcarta29
+        - name: git_email
+          value: fcarta@vmware.com   
+        - name: digest
+          value: $(params.digest)
+      workspaces:
+        - name: source
+          workspace: source

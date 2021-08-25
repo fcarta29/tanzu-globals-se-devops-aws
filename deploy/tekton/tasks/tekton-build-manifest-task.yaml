@@ -4,9 +4,9 @@ metadata:
   name: build-manifest
 spec:
   params:
-    - name: GIT_HUB_CREDS_USR
+    - name: git_user
       type: string
-    - name: GIT_HUB_CREDS_PSW
+    - name: git_email
       type: string
     - name: digest
       type: string
@@ -21,7 +21,7 @@ spec:
         #!/usr/bin/env bash
         rm -Rf tanzu-demo-lab-aws-examples
         
-        git clone https:///$(params.GIT_HUB_CREDS_USR):$(params.GIT_HUB_CREDS_PSW)@github.com/fcarta29/tanzu-demo-lab-aws-examples.git
+        git clone https://github.com/fcarta29/tanzu-demo-lab-aws-examples.git
         
         cd tanzu-demo-lab-aws-examples
         git checkout release    
@@ -29,8 +29,8 @@ spec:
         cd spring-petclinic/deploy                    
         ytt -f templates/kustomization.yaml -f templates/values.yaml -v digest='$(params.digest)' --output-files release/overlays/demo/.
 
-        git config --global user.name "Frank Carta"
-        git config --global user.email "fcarta@vmare.com"
+        git config --global user.name "$(params.git_user)"
+        git config --global user.email "$(params.git_email)"
         git commit -am "Releasing $(params.digest)"
 
         git pull --rebase origin spring-petclinic-demo

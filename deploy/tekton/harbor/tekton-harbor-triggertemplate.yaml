@@ -1,0 +1,76 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: harbor-triggertemplate
+  namespace: default
+spec:
+  params:
+  - name: type
+    description: description here
+    default: NULL-Missing  
+  - name: occur_at
+    description: description here
+    default: NULL-Missing  
+  - name: operator
+    description: description here
+    default: NULL-Missing  
+  - name: digest
+    description: description here
+    default: NULL-Missing  
+  - name: tag
+    description: description here
+    default: NULL-Missing  
+  - name: resource_url
+    description: description here
+    default: NULL-Missing  
+  - name: date_created
+    description: description here
+    default: NULL-Missing  
+  - name: name
+    description: description here
+    default: NULL-Missing  
+  - name: namespace
+    description: description here
+    default: NULL-Missing
+  - name: repo_full_name
+    description: description here
+    default: NULL-Missing  
+  - name: repo_type
+    description: description here
+    default: NULL-Missing
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: harbor-pipeline-run-
+    spec:
+      pipelineRef:
+        name: harbor-pipeline
+      serviceAccountName: tekton-sa
+      workspaces:
+        - name: source
+          persistentVolumeClaim:
+            claimName: pipeline-pvc
+      params:
+      - name: type
+        value: $(tt.params.type)
+      - name: occur_at
+        value: $(tt.params.occur_at)
+      - name: operator
+        value: $(tt.params.operator)
+      - name: digest
+        value: $(tt.params.digest)
+      - name: tag
+        value: $(tt.params.tag)
+      - name: resource_url
+        value: $(tt.params.resource_url)
+      - name: date_created
+        value: $(tt.params.date_created)
+      - name: name
+        value: $(tt.params.name)
+      - name: namespace
+        value: $(tt.params.namespace)
+      - name: repo_full_name
+        value: $(tt.params.repo_full_name)
+      - name: repo_type      
+        value: $(tt.params.repo_type)

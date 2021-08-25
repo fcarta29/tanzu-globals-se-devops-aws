@@ -3,3 +3,5 @@ kind: ServiceAccount
 metadata:
   name: tekton-sa
   namespace: default
+secrets:
+  - name: tekton-git-creds

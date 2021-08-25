@@ -3,13 +3,12 @@ LABEL maintainer="Frank Carta <fcarta@vmware.com>"
 
 ENV KUBECTL_VERSION=v1.19.6
 ENV ARGOCD_CLI_VERSION=v1.7.7
-ENV KPACK_VERSION=0.3.0
 ENV ARGOCD_VERSION=v2.0.1
+ENV KPACK_VERSION=0.3.0
 ENV ISTIO_VERSION=1.7.4
 ENV TKN_VERSION=0.17.2
 ENV KPDEMO_VERSION=v0.3.0
 ENV TANZU_CLI_VERSION=v1.3.1
-ENV TANZU_CE_CLI_VERSION=v0.5.0
 
 # Install System libraries
 RUN echo "Installing System Libraries" \
@@ -28,7 +27,7 @@ RUN echo "Installing TMC CLI" \
   && which tmc \
   && tmc version
 
-#Install Tanzu CLI
+# Install Tanzu CLI
 COPY bin/tanzu-cli-bundle-${TANZU_CLI_VERSION}-linux-amd64.tar .
 RUN echo "Installing Tanzu CLI" \
   && mkdir -p tanzu \
@@ -37,7 +36,7 @@ RUN echo "Installing Tanzu CLI" \
   && install core/${TANZU_CLI_VERSION}/tanzu-core-linux_amd64 /usr/local/bin/tanzu \
   && tanzu version 
 
-#Install Tanzu CLI Plugins
+# Install Tanzu CLI Plugins
 RUN echo "Installing Tanzu CLI Plugins" \
   && cd tanzu \
   && tanzu plugin install --local cli all \
@@ -53,7 +52,13 @@ RUN echo "Installing Kubectl" \
   && kubectl completion bash > /etc/bash_completion.d/kubectl \
   && kubectl version --short --client
 
-#Install Kustomize
+# Install Kubectl vSphere Plugin
+COPY bin/kubectl-vsphere .
+RUN echo "Installing Kubectl vSphere Plugin" \
+  && mv kubectl-vsphere  /usr/local/bin/kubectl-vsphere  \
+  && chmod +x /usr/local/bin/kubectl-vsphere
+
+# Install Kustomize
 RUN echo "Installing Kustomize" \
   && curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash \
   && mv kustomize /usr/local/bin/kustomize \
@@ -137,6 +142,13 @@ RUN echo "Installing kubens" \
 RUN echo "alias k=kubectl" >> /root/.profile \
   && echo "alias kubectx='kubectl ctx'" >> /root/.profile \
   && echo "alias kubens='kubectl ns'" >> /root/.profile
+
+# Install bat
+RUN echo "Installing bat" \  
+  && curl -L https://github.com/sharkdp/bat/releases/download/v0.18.1/bat-v0.18.1-x86_64-unknown-linux-gnu.tar.gz --output bat-v0.18.1-x86_64-unknown-linux-gnu.tar.gz \
+  && tar -zxvf bat-v0.18.1-x86_64-unknown-linux-gnu.tar.gz \
+  && mv bat-v0.18.1-x86_64-unknown-linux-gnu /usr/local/bin/. \
+  && ln -s /usr/local/bin/bat-v0.18.1-x86_64-unknown-linux-gnu/bat /usr/local/bin/bat
 
 # Leave Container Running for SSH Access - SHOULD REMOVE
 ENTRYPOINT ["tail", "-f", "/dev/null"]
