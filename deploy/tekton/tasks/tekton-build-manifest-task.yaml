@@ -10,6 +10,10 @@ spec:
       type: string
     - name: digest
       type: string
+    - name: repo_trigger_name
+      type: string
+    - name: repo_full_name
+      type: string
   workspaces:
     - name: source
       description: A workspace that contains the fetched git repository.
@@ -19,22 +23,27 @@ spec:
       image: harbor.tanzu.frankcarta.com/builders/tekton-task
       script: |
         #!/usr/bin/env bash
-        rm -Rf tanzu-demo-lab-aws-examples
-        
-        git clone https://github.com/fcarta29/tanzu-demo-lab-aws-examples.git
-        
-        cd tanzu-demo-lab-aws-examples
-        git checkout release    
 
-        cd spring-petclinic/deploy                    
-        ytt -f templates/kustomization.yaml -f templates/values.yaml -v digest='$(params.digest)' --output-files release/overlays/demo/.
+        if [[ "$(params.repo_trigger_name)" == "$(params.repo_full_name)" ]]; then
 
-        git config --global user.name "$(params.git_user)"
-        git config --global user.email "$(params.git_email)"
-        git commit -am "Releasing $(params.digest)"
+          rm -Rf tanzu-demo-lab-aws-examples
+          
+          git clone https://github.com/fcarta29/tanzu-demo-lab-aws-examples.git
+          
+          cd tanzu-demo-lab-aws-examples
+          git checkout release    
 
-        git pull --rebase origin spring-petclinic-demo
+          cd spring-petclinic/deploy                    
+          ytt -f templates/kustomization.yaml -f templates/values.yaml -v digest='$(params.digest)' --output-files release/overlays/demo/.
 
-        git push origin release -f
-        
+          git config --global user.name "$(params.git_user)"
+          git config --global user.email "$(params.git_email)"
+          git commit -am "Releasing $(params.digest)"
+
+          git pull --rebase origin spring-petclinic-demo
+
+          git push origin release -f
+        else
+          echo "No work to be done on this pipeline for repo: $(params.repo_full_name) and trigger: $(params.repo_trigger_name)"
+        fi
   

@@ -32,6 +32,10 @@ spec:
           value: fcarta@vmware.com   
         - name: digest
           value: $(params.digest)
+        - name: repo_trigger_name
+          value: "apps/spring-petclinic-application"       
+        - name: repo_full_name
+          value: $(params.repo_full_name)
       workspaces:
         - name: source
           workspace: source
