@@ -42,6 +42,11 @@ RUN echo "Installing Tanzu CLI Plugins" \
   && tanzu plugin install --local cli all \
   && tanzu plugin list
 
+# Install Tanzu Extensions
+COPY bin/tkg-extensions-manifests-${TANZU_CLI_VERSION}-vmware.1.tar.gz .
+RUN echo "Installing Tanzu Extensions" \
+  && tar -xzf tkg-extensions-manifests-v1.3.1-vmware.1.tar.gz -C tanzu
+
 # Install Kubectl
 RUN echo "Installing Kubectl" \
   && wget -q https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
