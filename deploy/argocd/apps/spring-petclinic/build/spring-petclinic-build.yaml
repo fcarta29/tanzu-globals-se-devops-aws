@@ -47,6 +47,6 @@ spec:
     kind: Builder
   source:
     git:
-      url: https://github.com/fcarta29/tanzu-demo-lab-aws-examples.git
+      url: https://github.com/fcarta29/tanzu-globals-se-demo-apps.git
       revision: spring-petclinic-demo
     subPath: "spring-petclinic/code"

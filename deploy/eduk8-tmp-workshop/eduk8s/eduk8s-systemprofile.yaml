@@ -1,0 +1,9 @@
+apiVersion: training.eduk8s.io/v1alpha1
+kind: SystemProfile
+metadata:
+  name: eduk8s-system-profile
+spec:
+  ingress:
+    domain: workshop.frankcarta.com
+    secret: eduk8s-secret
+    class: nginx

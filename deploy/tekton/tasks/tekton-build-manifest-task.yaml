@@ -26,11 +26,11 @@ spec:
 
         if [[ "$(params.repo_trigger_name)" == "$(params.repo_full_name)" ]]; then
 
-          rm -Rf tanzu-demo-lab-aws-examples
+          rm -Rf tanzu-globals-se-demo-apps
           
-          git clone https://github.com/fcarta29/tanzu-demo-lab-aws-examples.git
+          git clone https://github.com/fcarta29/tanzu-globals-se-demo-apps.git
           
-          cd tanzu-demo-lab-aws-examples
+          cd tanzu-globals-se-demo-apps
           git checkout release    
 
           cd spring-petclinic/deploy                    

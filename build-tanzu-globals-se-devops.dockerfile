@@ -4,16 +4,18 @@ LABEL maintainer="Frank Carta <fcarta@vmware.com>"
 ENV KUBECTL_VERSION=v1.19.6
 ENV ARGOCD_CLI_VERSION=v1.7.7
 ENV ARGOCD_VERSION=v2.0.1
-ENV KPACK_VERSION=0.3.0
+ENV KPACK_VERSION=0.3.1
 ENV ISTIO_VERSION=1.7.4
 ENV TKN_VERSION=0.17.2
 ENV KPDEMO_VERSION=v0.3.0
 ENV TANZU_CLI_VERSION=v1.3.1
+ENV KUBESEAL_VERSION=v0.15.0
+ENV KREW_VERSION=v0.4.1
 
 # Install System libraries
 RUN echo "Installing System Libraries" \
   && apt-get update \
-  && apt-get install -y build-essential python3.6 python3-pip python3-dev groff bash-completion git curl unzip wget findutils jq vim tree docker.io
+  && apt-get install -y build-essential python3.6 python3-pip python3-dev groff bash-completion git curl unzip wget findutils jq vim tree docker.io moreutils
 
 # Install AWS CLI
 RUN echo "Installing AWS CLI" \
@@ -95,7 +97,7 @@ RUN echo "Installing kpack log utility" \
 
 # Install Carvel tools
 RUN echo "Installing K14s Carvel tools" \
-  && wget -O- https://k14s.io/install.sh | bash 
+  && wget -O- https://carvel.dev/install.sh | bash
 
 # Install Istioctl
 RUN echo "Installing Istioctl" \
@@ -112,7 +114,7 @@ RUN echo "Installing ArgoCD" \
 
 # Install Bitnami Sealed Secrets
 RUN echo "Installing Bitnami Sealed Secrets" \
-  && wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.15.0/kubeseal-linux-amd64 -O kubeseal \
+  && wget https://github.com/bitnami-labs/sealed-secrets/releases/download/$KUBESEAL_VERSION/kubeseal-linux-amd64 -O kubeseal \
   && install -m 755 kubeseal /usr/local/bin/kubeseal
 
 # Install Tekton CLI
@@ -127,7 +129,7 @@ RUN echo "Installing Krew" \
   && (set -x; cd "$(mktemp -d)" \
   && OS="$(uname | tr '[:upper:]' '[:lower:]')" \
   && ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" \
-  && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" \
+  && curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/$KREW_VERSION/krew.tar.gz" \
   && tar zxvf krew.tar.gz \
   && KREW=./krew-"${OS}_${ARCH}" \
   && "$KREW" install krew) \

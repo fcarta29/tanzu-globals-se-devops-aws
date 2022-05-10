@@ -1,0 +1,21 @@
+
+apiVersion: training.eduk8s.io/v1alpha1
+kind: TrainingPortal
+metadata:
+  labels:
+    app.kubernetes.io/instance: eduk8s
+  name: portal
+spec:
+  portal:
+    capacity: 20
+    expires: 90m
+    orphaned: 5m
+    password: PlatformTuesday
+    registration:
+      type: anonymous
+    reserved: 0
+    sessions:
+      maximum: 20
+    title: Workshop Portal
+  workshops:
+  - name: lab-configuration-management

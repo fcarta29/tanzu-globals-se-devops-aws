@@ -8,4 +8,4 @@ RUN echo "Installing System Libraries" \
 
 # Install Carvel tools
 RUN echo "Installing K14s Carvel tools" \
-  && wget -O- https://k14s.io/install.sh | bash 
+  && wget -O- https://carvel.dev/install.sh | bash

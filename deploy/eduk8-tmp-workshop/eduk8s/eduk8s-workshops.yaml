@@ -1,0 +1,34 @@
+apiVersion: training.eduk8s.io/v1alpha2
+kind: Workshop
+metadata:
+  labels:
+    app.kubernetes.io/instance: eduk8s
+  name: lab-configuration-management
+spec:
+  content:
+    files: github.com/samarsinghal/lab-configuration-management
+    image: docker.io/samarsinghal/workshop:latest
+  description: An interactive workshop on container configuration management
+  difficulty: intermediate
+  duration: 60m
+  session:
+    applications:
+      console:
+        enabled: true
+        vendor: octant
+      docker:
+        enabled: true
+      editor:
+        enabled: true
+      registry:
+        enabled: true
+      terminal:
+        enabled: true
+        layout: split
+    namespaces:
+      budget: medium
+  tags:
+  - containers
+  title: Configuration Management
+  url: https://github.com/samarsinghal/lab-configuration-management
+  vendor: eduk8s.io
