@@ -54,13 +54,12 @@ RUN echo "alias k=kubectl" >> /root/.profile \
   && echo "alias kubens='kubectl ns'" >> /root/.profile
 
 
-FROM k8sbase
+FROM k8sbase as clibase
 ENV ARGOCD_CLI_VERSION=v1.7.7
 ENV ARGOCD_VERSION=v2.0.1
 ENV KPACK_VERSION=0.5.0
 ENV ISTIO_VERSION=1.7.4
 ENV TKN_VERSION=0.17.2
-ENV TANZU_CLI_VERSION=v1.4.2
 ENV KUBESEAL_VERSION=v0.15.0
 
 # Install AWS CLI
@@ -84,21 +83,6 @@ COPY bin/kubectl-vsphere .
 RUN echo "Installing Kubectl vSphere Plugin" \
   && mv kubectl-vsphere  /usr/local/bin/kubectl-vsphere  \
   && chmod +x /usr/local/bin/kubectl-vsphere
-
-# Install Tanzu CLI
-COPY bin/tanzu-cli-bundle-${TANZU_CLI_VERSION}-linux-amd64.tar .
-RUN echo "Installing Tanzu CLI" \
-  && mkdir -p tanzu \
-  && tar xvf tanzu-cli-bundle-${TANZU_CLI_VERSION}-linux-amd64.tar -C tanzu \
-  && cd tanzu/cli \
-  && install core/${TANZU_CLI_VERSION}/tanzu-core-linux_amd64 /usr/local/bin/tanzu \
-  && tanzu version 
-
-# Install Tanzu CLI Plugins
-RUN echo "Installing Tanzu CLI Plugins" \
-  && cd tanzu \
-  && tanzu plugin install --local cli all \
-  && tanzu plugin list
 
 # Install Kustomize
 RUN echo "Installing Kustomize" \
@@ -146,6 +130,27 @@ RUN echo "Installing Tekton CLI" \
   && tar xvzf tkn_${TKN_VERSION}_Linux_x86_64.tar.gz -C /usr/local/bin/ tkn \
   && chmod +x /usr/local/bin/tkn \
   && tkn version
+
+FROM clibase
+ENV TKG_VERSION=v1.5.4
+ENV TANZU_CLI_VERSION=v0.11.6
+
+# Install Tanzu CLI
+COPY bin/tanzu-cli-bundle-${TKG_VERSION}-linux-amd64.tar .
+RUN echo "Installing Tanzu CLI" \
+  && mkdir -p tanzu \
+  && tar xvf tanzu-cli-bundle-${TKG_VERSION}-linux-amd64.tar -C tanzu \
+  && cd tanzu/cli \
+  && install core/${TANZU_CLI_VERSION}/tanzu-core-linux_amd64 /usr/local/bin/tanzu \
+  && tanzu init \
+  && tanzu version 
+
+# Install Tanzu CLI Plugins
+RUN echo "Installing Tanzu CLI Plugins" \
+  && cd tanzu \
+  && tanzu plugin sync \
+  #&& tanzu plugin install --local cli all \
+  && tanzu plugin list
 
 # Leave Container Running for SSH Access - SHOULD REMOVE
 ENTRYPOINT ["tail", "-f", "/dev/null"]
