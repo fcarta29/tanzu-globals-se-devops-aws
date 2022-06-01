@@ -1,0 +1,10 @@
+---
+kp_default_repository: <INSTALL_REPOSITORY>
+kp_default_repository_username: <INSTALL_REGISTRY_USERNAME>
+kp_default_repository_password: <INSTALL_REGISTRY_PASSWORD>
+pull_from_kp_default_repo: true
+tanzunet_username: <TANZUNET_REGISTRY_USERNAME>
+tanzunet_password: <TANZUNET_REGISTRY_PASSWORD>
+descriptor_name: <DESCRIPTOR-NAME>
+enable_automatic_dependency_updates: true
+ca_cert_data: <CA_CERT_CONTENTS> (optional)

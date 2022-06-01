@@ -9,29 +9,29 @@ secrets:
 - name: demo-git-credentials
 imagePullSecrets:
 - name: demo-harbor-credentials
----
+#---
 # Creates Spring Pet Clinic applicaiton builder 
-apiVersion: kpack.io/v1alpha1
-kind: Builder
-metadata:
-  labels:
-    app: spring-petclinic
-  name: spring-petclinic-builder
-  namespace: spring-petclinic
-spec:
-  serviceAccount: spring-petclinic-service-account
-  tag:  harbor.tanzu.frankcarta.com/builders/spring-petclinic-builder
-  stack:
-    name: full
-    kind: ClusterStack
-  store:
-    name: default
-    kind: ClusterStore
-  order:
-  - group:
-    - id: tanzu-buildpacks/java
-  - group:
-    - id: tanzu-buildpacks/nodejs
+#apiVersion: kpack.io/v1alpha1
+#kind: Builder
+#metadata:
+#  labels:
+#    app: spring-petclinic
+#  name: spring-petclinic-builder
+#  namespace: spring-petclinic
+#spec:
+#  serviceAccount: spring-petclinic-service-account
+#  tag:  harbor.tanzu.frankcarta.com/builders/spring-petclinic-builder
+#  stack:
+#    name: full
+#    kind: ClusterStack
+#  store:
+#    name: default
+#    kind: ClusterStore
+#  order:
+#  - group:
+#    - id: tanzu-buildpacks/java
+#  - group:
+#    - id: tanzu-buildpacks/nodejs
 ---
 # Creates Spring Pet Clinic image to be built
 apiVersion: kpack.io/v1alpha1
@@ -43,8 +43,10 @@ spec:
   tag:  harbor.tanzu.frankcarta.com/apps/spring-petclinic-application
   serviceAccount: spring-petclinic-service-account
   builder:
-    name: spring-petclinic-builder
-    kind: Builder
+    name: full
+    kind: ClusterBuilder
+#    name: spring-petclinic-builder
+#    kind: Builder
   source:
     git:
       url: https://github.com/fcarta29/tanzu-globals-se-demo-apps.git
