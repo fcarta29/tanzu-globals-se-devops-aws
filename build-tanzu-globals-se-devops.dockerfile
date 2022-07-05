@@ -8,7 +8,6 @@ RUN echo "Installing System Libraries" \
 
 FROM base as k8sbase
 ENV KUBECTL_VERSION=v1.19.6
-ENV BAT_VERSION=v0.18.1
 
 # Install Kubectl
 RUN echo "Installing Kubectl" \
@@ -41,13 +40,6 @@ RUN echo "Installing kubens" \
   && PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH" \
   kubectl krew install ns
 
-# Install bat
-RUN echo "Installing bat" \  
-  && curl -L https://github.com/sharkdp/bat/releases/download/${BAT_VERSION}/bat-${BAT_VERSION}-x86_64-unknown-linux-gnu.tar.gz --output bat-${BAT_VERSION}-x86_64-unknown-linux-gnu.tar.gz \
-  && tar -zxvf bat-${BAT_VERSION}-x86_64-unknown-linux-gnu.tar.gz \
-  && mv bat-${BAT_VERSION}-x86_64-unknown-linux-gnu /usr/local/bin/. \
-  && ln -s /usr/local/bin/bat-${BAT_VERSION}-x86_64-unknown-linux-gnu/bat /usr/local/bin/bat
-
 # Create Aliases
 RUN echo "alias k=kubectl" >> /root/.profile \
   && echo "alias kubectx='kubectl ctx'" >> /root/.profile \
@@ -55,12 +47,20 @@ RUN echo "alias k=kubectl" >> /root/.profile \
 
 
 FROM k8sbase as clibase
+ENV BAT_VERSION=v0.18.1
 ENV ARGOCD_CLI_VERSION=v1.7.7
 ENV ARGOCD_VERSION=v2.0.1
 ENV KPACK_VERSION=0.5.0
 ENV ISTIO_VERSION=1.7.4
 ENV TKN_VERSION=0.17.2
 ENV KUBESEAL_VERSION=v0.15.0
+
+# Install bat
+RUN echo "Installing bat" \  
+  && curl -L https://github.com/sharkdp/bat/releases/download/${BAT_VERSION}/bat-${BAT_VERSION}-x86_64-unknown-linux-gnu.tar.gz --output bat-${BAT_VERSION}-x86_64-unknown-linux-gnu.tar.gz \
+  && tar -zxvf bat-${BAT_VERSION}-x86_64-unknown-linux-gnu.tar.gz \
+  && mv bat-${BAT_VERSION}-x86_64-unknown-linux-gnu /usr/local/bin/. \
+  && ln -s /usr/local/bin/bat-${BAT_VERSION}-x86_64-unknown-linux-gnu/bat /usr/local/bin/bat
 
 # Install AWS CLI
 RUN echo "Installing AWS CLI" \
@@ -131,7 +131,7 @@ RUN echo "Installing Tekton CLI" \
   && chmod +x /usr/local/bin/tkn \
   && tkn version
 
-FROM clibase
+FROM clibase AS devops
 ENV TKG_VERSION=v1.5.4
 ENV TANZU_CLI_VERSION=v0.11.6
 
